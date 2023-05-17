@@ -1,0 +1,415 @@
+<mvc:View controllerName="at.clouddna.showcase.controller.Items"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:mic="sap.suite.ui.microchart"
+    xmlns:uxap="sap.uxap"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:layout="sap.ui.layout"
+    xmlns:com="sap.suite.ui.commons"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:viz.data="sap.viz.ui5.data">
+    <Page>
+        <uxap:ObjectPageLayout id="ObjectPageLayout"
+    	    showTitleInHeaderContent="true"
+		    showEditHeaderButton="true"
+		    editHeaderButtonPress="handleEditBtnPress"
+		    upperCaseAnchorBar="false">
+		    <uxap:headerTitle>
+			    <uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+                        <Title text="Tools" wrapping="true"/>
+				</uxap:expandedHeading>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		    </uxap:headerTitle>
+
+            <uxap:headerContent>
+                <FlexBox wrap="Wrap">
+                    <l:HorizontalLayout class="sapUiSmallMarginBeginEnd" >
+                                <mic:RadialMicroChart size="M" percentage="80" valueColor="Good" class="sapUiSmallMargin" />
+                                <mic:RadialMicroChart size="M" percentage="45"  class="sapUiSmallMargin" />
+                                <mic:RadialMicroChart size="M" percentage="10" valueColor="Error" class="sapUiSmallMargin" />
+                    </l:HorizontalLayout>
+                </FlexBox>
+            </uxap:headerContent>
+
+		    <uxap:sections>
+			    <uxap:ObjectPageSection titleUppercase="false" id="simpleFormSection" title="Simpleform">
+				    <uxap:subSections>
+					    <uxap:ObjectPageSubSection id="simpleForm">
+						    <uxap:blocks>
+							    <f:SimpleForm id="SimpleForm1"
+                                    editable="false"
+                                    layout="ResponsiveGridLayout"
+                                    labelSpanXL="3"
+                                    labelSpanL="3"
+                                    labelSpanM="3"
+                                    labelSpanS="12"
+                                    adjustLabelSpan="false"
+                                    emptySpanXL="0"
+                                    emptySpanL="0"
+                                    emptySpanM="0"
+                                    emptySpanS="0"
+                                    columnsXL="1"
+                                    columnsL="1"
+                                    columnsM="1"
+                                    singleContainerFullSize="false" >
+                                    <f:content>
+                                        <Panel expanded="true" expandable="true" headerText="Wichtiges" class="sapUiResponsiveMargin">
+                                            <content>
+                                                <Label text="Name" textAlign="Center" vAlign="Middle"/>
+                                                <Input value="" width="98%"/>
+                                                <Label text="Firma" />
+                                                <Input value="" width="98%"/>
+                                            </content>
+                                        </Panel>
+                                        <Panel expanded="true" expandable="true" headerText="Zusatzinfos" class="sapUiResponsiveMargin">
+                                            <content>
+                                                <Label text="Geburtsdatum" />
+                                                <DatePicker value="" width="98%" placeholder=" "/>
+                                                <Label text="Geschlecht" />
+                                                <Select width="98%" forceSelection="false">
+                                                    <core:Item key="maennlich" text="Männlich" />
+                                                    <core:Item key="weiblich" text="Weiblich" />
+                                                </Select>
+                                            </content>
+                                        </Panel>
+                                    </f:content>
+                                </f:SimpleForm>
+						    </uxap:blocks>
+					    </uxap:ObjectPageSubSection>
+				    </uxap:subSections>
+			    </uxap:ObjectPageSection>
+
+			    <uxap:ObjectPageSection titleUppercase="false" id="tableSection" title="Table">
+					<uxap:subSections>
+					    <uxap:ObjectPageSubSection id="table" title="Table" titleUppercase="false">
+						    <uxap:blocks>
+							    <Table id="idProductsTable"
+                                    inset="false"
+                                    alternateRowColors="true"
+                                    items="{dataModel>/}">
+                                    <columns>
+                                        <Column>
+                                            <Text text="Product" />
+                                        </Column>
+                                        <Column >
+                                            <Text text="Supplier" />
+                                        </Column>
+                                        <Column>
+                                            <Text text="Kategorie" />
+                                        </Column>
+                                        <Column>
+                                            <Text text="Anzahl" />
+                                        </Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem vAlign="Middle">
+                                            <cells>
+                                                <ObjectIdentifier title="{dataModel>produkt}"/>
+                                                <Text text="{dataModel>beschreibung}" />
+                                                <Text text="{dataModel>kategorie}" />
+                                                <Text text="{dataModel>anzahl}" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </uxap:blocks>
+                        </uxap:ObjectPageSubSection>
+                    </uxap:subSections>
+                </uxap:ObjectPageSection>
+
+			    <uxap:ObjectPageSection titleUppercase="false" id="barChartSection" title="Charts">
+				    <uxap:subSections>
+					    <uxap:ObjectPageSubSection id="charts" titleUppercase="false">
+						    <uxap:blocks>
+							    <layout:FixFlex id='chartFixFlex' minFlexSize="300">
+                                    <layout:fixContent>
+                                        <Panel id='settingsPanel' class="panelStyle" expanded="true" width="auto">
+                                            <content>
+                                                <HBox class='settingsHBox'>
+                                                <VBox width="200px">
+                                                    <Label text = '{/chartType/name}' design="Bold" class='settingsLabel'/>
+                                                    <Select id='chartTypeSelect' class='settingsSelect' selectedKey='{/chartType/defaultSelected}' maxWidth="150px" change='onChartTypeChanged' 
+                                                        items="{path: '/chartType/values'}">
+                                                        <items>
+                                                            <core:Item text="{name}" key="{key}" />
+                                                        </items>
+                                                    </Select>
+                                                </VBox>
+                                                </HBox>
+                                            </content>
+                                        </Panel>
+                                    </layout:fixContent>
+                                    
+                                                    
+                                    <layout:flexContent>
+                                        <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}"
+                                            height='100%' width="100%" vizType='timeseries_line'>
+                                            
+                                            <viz:dataset>
+                                                <viz.data:FlattenedDataset data="{/milk}">
+                                                    <viz.data:dimensions>
+                                                        <viz.data:DimensionDefinition name="Date"
+                                                            value="{Date}" dataType="date"/>
+                                                    </viz.data:dimensions>
+                                                    <viz.data:measures>
+                                                        <viz.data:MeasureDefinition name="Revenue"
+                                                            value="{Revenue}" />
+                                                    </viz.data:measures>
+                                                </viz.data:FlattenedDataset>
+                                            </viz:dataset>
+
+                                            <viz:feeds>
+                                                <viz.feeds:FeedItem uid="valueAxis" type="Measure"
+                                                    values="Revenue" />
+                                                <viz.feeds:FeedItem uid="timeAxis" type="Dimension"
+                                                    values="Date" />
+                                            </viz:feeds>
+                                        </viz:VizFrame>
+                                    </layout:flexContent>
+                                </layout:FixFlex>
+				            </uxap:blocks>
+			            </uxap:ObjectPageSubSection>
+				    </uxap:subSections>
+                </uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" id="prozessFlowSection" title="Process Flow">
+					<uxap:subSections>
+					    <uxap:ObjectPageSubSection id="processFlow" title="Process Flow" titleUppercase="false">
+						    <uxap:blocks>
+							    <ScrollContainer
+                                    height="100%"
+                                    width="100%"
+                                    horizontal="false"
+                                    vertical="false"
+                                    focusable="false">
+                                    <HBox renderType="Bare" justifyContent="End">
+                                        <Button icon="sap-icon://zoom-in" press="onZoomIn" />
+                                        <Button icon="sap-icon://zoom-out" press="onZoomOut" />
+                                    </HBox>
+                                    <com:ProcessFlow
+                                        id="processflow1"
+                                        foldedCorners="true"
+                                        scrollable="false"
+                                        wheelZoomable="false"
+                                        nodes="{processFlowModel>/nodes}"
+                                        lanes="{processFlowModel>/lanes}">
+                                        <com:nodes>
+                                            <com:ProcessFlowNode
+                                                laneId="{processFlowModel>lane}"
+                                                nodeId="{processFlowModel>id}"
+                                                title="{processFlowModel>title}"
+                                                titleAbbreviation="{processFlowModel>titleAbbreviation}"
+                                                children="{processFlowModel>children}"
+                                                state="{processFlowModel>state}"
+                                                stateText="{processFlowModel>stateText}"
+                                                texts="{processFlowModel>texts}"
+                                                highlighted="{processFlowModel>highlighted}"
+                                                focused="{processFlowModel>focused}" />
+                                        </com:nodes>
+                                        <com:lanes>
+                                            <com:ProcessFlowLaneHeader
+                                                laneId="{processFlowModel>id}"
+                                                iconSrc="{processFlowModel>icon}"
+                                                text="{processFlowModel>label}"
+                                                position="{processFlowModel>position}" />
+                                        </com:lanes>
+                                    </com:ProcessFlow>
+                                </ScrollContainer>
+                            </uxap:blocks>
+                        </uxap:ObjectPageSubSection>
+                    </uxap:subSections>
+                </uxap:ObjectPageSection>
+		</uxap:sections>
+		<uxap:footer>
+			<OverflowToolbar>
+				<ToolbarSpacer />
+				<Button type="Accept" text="Accept"/>
+				<Button type="Reject" text="Reject"/>
+			</OverflowToolbar>
+		</uxap:footer>
+	    </uxap:ObjectPageLayout>
+    </Page>
+</mvc:View>
+    <!-- <Page >
+    <ObjectHeader
+        backgroundDesign="Solid"
+		title="Items">
+		<statuses>
+			<ObjectStatus text="Error" state="Error" />
+			<ObjectStatus text="Success" state="Success" />
+		</statuses>
+		<ObjectAttribute text="Test" />
+		<ObjectAttribute text="Test 1" />
+	</ObjectHeader>
+
+    <IconTabBar
+		id="idIconTabBarMulti"
+		class="sapUiResponsiveContentPadding">
+		<items>
+			<IconTabFilter icon="sap-icon://accelerated" key="simpleForm">
+				<f:SimpleForm id="SimpleForm1"
+			        editable="false"
+			        layout="ResponsiveGridLayout"
+			        title="Simple Form - Personenbeschreibung"
+			        labelSpanXL="3"
+			        labelSpanL="3"
+			        labelSpanM="3"
+			        labelSpanS="12"
+			        adjustLabelSpan="false"
+			        emptySpanXL="4"
+			        emptySpanL="4"
+                    emptySpanM="4"
+                    emptySpanS="0"
+                    columnsXL="1"
+                    columnsL="1"
+                    columnsM="1"
+                    singleContainerFullSize="false" >
+                    <f:content>
+                        <Label text="Name" textAlign="Center" vAlign="Middle"/>
+                        <Input value="" />
+                        <Label text="Geburtsdatum" />
+                        <DatePicker value="" placeholder=" "/>
+                        <Label text="Geschlecht" />
+                        <Select
+					        forceSelection="false">
+					        <core:Item key="maennlich" text="Männlich" />
+                            <core:Item key="weiblich" text="Weiblich" />
+				        </Select>
+                        <Label text="Firma" />
+                        <Input value="" />
+                    </f:content>
+                </f:SimpleForm>
+			</IconTabFilter>
+
+			<IconTabFilter
+				icon="sap-icon://table-view"
+				key="table">
+				<Table id="idProductsTable"
+                    inset="false"
+                    alternateRowColors="true"
+                    items="{dataModel>/}">
+                    <columns>
+                        <Column>
+                            <Text text="Product" />
+                        </Column>
+                        <Column >
+                            <Text text="Supplier" />
+                        </Column>
+                        <Column>
+                            <Text text="Kategorie" />
+                        </Column>
+                        <Column>
+                            <Text text="Anzahl" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem vAlign="Middle">
+                            <cells>
+                                <ObjectIdentifier title="{dataModel>produkt}"/>
+                                <Text text="{dataModel>beschreibung}" />
+                                <Text text="{dataModel>kategorie}" />
+                                <Text text="{dataModel>anzahl}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+			</IconTabFilter>
+
+			<IconTabFilter
+				icon="sap-icon://bar-chart"
+				key="charts">
+				<layout:FixFlex id='chartFixFlex' minFlexSize="300">
+                    <layout:fixContent>
+                        <Panel id='settingsPanel' class="panelStyle" expanded="true" headerText="Charts" width="auto">
+                            <content>
+                                <HBox class='settingsHBox'>
+                                <VBox width="200px">
+                                    <Label text = '{/chartType/name}' design="Bold" class='settingsLabel'></Label>
+                                    <Select id='chartTypeSelect' class='settingsSelect' selectedKey='{/chartType/defaultSelected}' maxWidth="150px" change='onChartTypeChanged' 
+                                        items="{path: '/chartType/values'}">
+                                        <items>
+                                            <core:Item text="{name}" key="{key}" />
+                                        </items>
+                                    </Select>
+                                </VBox>
+                                </HBox>
+                            </content>
+                        </Panel>
+                    </layout:fixContent>
+                    <layout:flexContent>
+                        <viz:Popover id="idPopOver"></viz:Popover>
+                        <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}"
+                            height='100%' width="100%" vizType='timeseries_line'>
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{/milk}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Date"
+                                            value="{Date}" dataType="date"/>
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Revenue"
+                                            value="{Revenue}" />
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+
+                            <viz:feeds>
+                                <viz.feeds:FeedItem uid="valueAxis" type="Measure"
+                                    values="Revenue" />
+                                <viz.feeds:FeedItem uid="timeAxis" type="Dimension"
+                                    values="Date" />
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </layout:flexContent>
+                </layout:FixFlex>
+			</IconTabFilter>
+
+            
+			<IconTabFilter 
+                icon="sap-icon://process"
+                key="process flow">
+				<ScrollContainer
+                    height="100%"
+                    width="100%"
+                    horizontal="false"
+                    vertical="false"
+                    focusable="true">
+                    <Label text="Process Flow" />
+                    <com:ProcessFlow
+                        id="processflow1"
+                        foldedCorners="true"
+                        scrollable="true"
+                        nodes="{processFlowModel>/nodes}"
+                        lanes="{processFlowModel>/lanes}">
+                        <com:nodes>
+                            <com:ProcessFlowNode
+                                laneId="{processFlowModel>lane}"
+                                nodeId="{processFlowModel>id}"
+                                title="{processFlowModel>title}"
+                                titleAbbreviation="{processFlowModel>titleAbbreviation}"
+                                children="{processFlowModel>children}"
+                                state="{processFlowModel>state}"
+                                stateText="{processFlowModel>stateText}"
+                                texts="{processFlowModel>texts}"
+                                highlighted="{processFlowModel>highlighted}"
+                                focused="{processFlowModel>focused}" />
+                        </com:nodes>
+                        <com:lanes>
+                            <com:ProcessFlowLaneHeader
+                                laneId="{processFlowModel>id}"
+                                iconSrc="{processFlowModel>icon}"
+                                text="{processFlowModel>label}"
+                                position="{processFlowModel>position}" />
+                        </com:lanes>
+                    </com:ProcessFlow>
+                </ScrollContainer>
+			</IconTabFilter>
+		</items>
+	</IconTabBar>
+    </Page>
+</mvc:View> -->

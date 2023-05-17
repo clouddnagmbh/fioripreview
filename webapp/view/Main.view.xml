@@ -1,0 +1,205 @@
+<mvc:View controllerName="at.clouddna.showcase.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    height="100%"
+	xmlns:mic="sap.suite.ui.microchart"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.f"
+	xmlns:fb="sap.ui.comp.filterbar">
+	<Page>
+	<fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="true" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
+		<fb:filterGroupItems>
+			<!-- 
+			<fb:FilterGroupItem groupName="A" name="Produkt" label="Produkt" visibleInFilterBar="true">
+				<fb:control>
+						<SearchField width="100%" />
+				</fb:control>
+			</fb:FilterGroupItem>
+			-->
+			<fb:FilterGroupItem  groupName="A" name="Kategorie" label="Kategorie"  visibleInFilterBar="true">
+				<fb:control>
+					<MultiComboBox
+						name="Category">
+						<core:Item text="Laptop"/>
+						<core:Item text="PC"/>
+						<core:Item text="Maus"/>
+						<core:Item text="Tastatur"/>
+					</MultiComboBox>
+				</fb:control>
+			</fb:FilterGroupItem>
+			<fb:FilterGroupItem  groupName="A" name="Anzahl" label="Anzahl"  visibleInFilterBar="true">
+				<fb:control>
+					<MultiComboBox
+						name="Anzahl">
+						<core:Item text = "weniger als 5"/>
+						<core:Item text = "mehr als 5"/>
+						<core:Item text = "mehr als 10"/>
+					</MultiComboBox>
+				</fb:control>
+			</fb:FilterGroupItem>
+		</fb:filterGroupItems>
+	</fb:FilterBar>
+	<Table
+		id="idProductsTable"
+		alternateRowColors="true"
+		inset="false"
+		items="{dataModel>/}">
+		<headerToolbar>
+			<OverflowToolbar>				
+				<content>
+					<Title text="Show case (5)" titleStyle="H4"/>
+					<ToolbarSpacer/>
+					<Button icon="sap-icon://download" type="Transparent"/>
+					<Button icon="sap-icon://action-settings" type="Transparent" />
+				</content>
+			</OverflowToolbar>
+		</headerToolbar>
+		<columns>
+			<Column>
+				<Text text="Produkt"/>
+			</Column>
+			<Column>
+				<Text text="Beschreibung"/>
+			</Column>
+			<Column>
+				<Text text="Kategorie"/>
+			</Column>
+			<Column>
+				<Text text="Anzahl"/>
+			</Column>
+			<Column>
+				<Text text="Bewertung"/>
+			</Column>
+			<Column>
+				<Text text="Tools"/>
+			</Column>
+		</columns>
+
+		<items>
+			<ColumnListItem vAlign="Middle" type="Navigation" press="onListItemPressed">
+				<cells>
+					<ObjectIdentifier title="{dataModel>produkt}"/>
+					<Text text="{dataModel>beschreibung}" />
+					<Text text="{dataModel>kategorie}" />
+					<ObjectStatus text="{dataModel>anzahl}" state="{dataModel>color}" />
+					<RatingIndicator maxValue="5" class="sapUiSmallMarginBottom" value="{dataModel>rating}" />
+					<mic:ComparisonMicroChart size="S" scale="M" class="sapUiSmallMargin" press="press">
+						<mic:data>
+							<mic:ComparisonMicroChartData	title="März" value="{dataModel>maerz}" color="{dataModel>colorMaerz}" />
+							<mic:ComparisonMicroChartData	title="April" value="{dataModel>april}" color="{dataModel>colorApril}"/>
+							<mic:ComparisonMicroChartData	title="Mai" value="{dataModel>mai}" color="{dataModel>colorMai}"/>
+						</mic:data>
+					</mic:ComparisonMicroChart>
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+	</Page>
+</mvc:View>
+
+
+
+<!-- <mvc:View controllerName="at.clouddna.showcase.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    height="100%"
+	xmlns:mic="sap.suite.ui.microchart"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.f"
+	xmlns:fb="sap.ui.comp.filterbar"
+	xmlns:svm="sap.ui.comp.smartletiants">
+    <f:DynamicPage headerExpanded="{/headerExpanded}">
+			<f:title>
+				<f:DynamicPageTitle>
+					<f:expandedContent>
+						<Title id="expandedLabel" level="H6" text="Show case" />
+					</f:expandedContent>
+				</f:DynamicPageTitle>
+			</f:title>
+			<f:header>
+				<f:DynamicPageHeader>
+					<f:content>
+						<fb:FilterBar id="filterbar" persistencyKey="myPersKey" useToolbar="false" search=".onSearch" filterChange=".onFilterChange" afterVariantLoad=".onAfterVariantLoad">
+							<fb:filterItems>
+								<fb:FilterItem name="Produkt" label="Produkt">
+									<fb:control>
+                                            <SearchField width="100%" />
+									</fb:control>
+								</fb:FilterItem>
+								<fb:FilterItem name="Kategorie" label="Kategorie">
+									<fb:control>
+										<MultiComboBox
+											name="Category">
+											<core:Item text="Laptop"/>
+											<core:Item text="PC"/>
+											<core:Item text="Maus"/>
+											<core:Item text="Tastatur"/>
+										</MultiComboBox>
+									</fb:control>
+								</fb:FilterItem>
+								<fb:FilterItem name="Anzahl" label="Anzahl">
+									<fb:control>
+										<MultiComboBox
+											name="Anzahl">
+											<core:Item text = " weniger als 5"/>
+											<core:Item text = "mehr als 5"/>
+											<core:Item text = "mehr als 10"/>
+										</MultiComboBox>
+									</fb:control>
+								</fb:FilterItem>
+							</fb:filterItems>
+						</fb:FilterBar>
+					</f:content>
+				</f:DynamicPageHeader>
+			</f:header>
+			<f:content>
+
+				<Table
+					id="table"
+					inset="false"
+					width="100%"
+					alternateRowColors="true"
+					items="{dataModel>/}">
+					<columns>
+						<Column>
+							<Text text="Produkt"/>
+						</Column>
+                        <Column>
+							<Text text="Beschreibung"/>
+						</Column>
+						<Column>
+							<Text text="Kategorie"/>
+						</Column>
+						<Column>
+							<Text text="Anzahl"/>
+						</Column>
+						<Column>
+							<Text text="Bewertung"/>
+						</Column>
+						<Column>
+							<Text text="Tools"/>
+						</Column>
+					</columns>
+
+					<items>
+						<ColumnListItem vAlign="Middle" type="Navigation" press="onListItemPressed">
+							<cells>
+								<ObjectIdentifier title="{dataModel>produkt}"/>
+                                <Text text="{dataModel>beschreibung}" />
+								<Text text="{dataModel>kategorie}" />
+								<ObjectStatus text="{dataModel>anzahl}" state="{dataModel>color}" />
+								<RatingIndicator maxValue="5" class="sapUiSmallMarginBottom" value="{dataModel>rating}" />
+								<mic:ComparisonMicroChart size="S" scale="M" class="sapUiSmallMargin" press="press">
+									<mic:data>
+										<mic:ComparisonMicroChartData	title="März" value="{dataModel>maerz}" color="{dataModel>colorMaerz}" />
+										<mic:ComparisonMicroChartData	title="April" value="{dataModel>april}" color="{dataModel>colorApril}"/>
+										<mic:ComparisonMicroChartData	title="Mai" value="{dataModel>mai}" color="{dataModel>colorMai}"/>
+									</mic:data>
+								</mic:ComparisonMicroChart>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+			</f:content>
+		</f:DynamicPage>
+</mvc:View> -->
